@@ -83,7 +83,7 @@ bool CXACT3Util::LoadWaveBank(LPCWSTR szFilePath)
 
     // Create wave bank
     HRESULT hr = m_pXACT3Engine->CreateInMemoryWaveBank(
-        m_pWaveBankData, dwFileSize, 0, 0, &m_pWaveBank);
+        m_pWaveBankData, dwFileSize, 0, 0, &m_pWaveBank); 
     if (FAILED(hr))
         return false;
 

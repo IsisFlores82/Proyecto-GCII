@@ -1,0 +1,22 @@
+# Blender 4.0.2 MTL File: 'None'
+# www.blender.org
+
+newmtl Material_#108.004
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 1
+map_Kd C:/Users/isis/Downloads/modelos graficas/old-rusty-car-2020-17k-followers/source/Oldcar/Material _49_Base_Color.png
+map_d C:/Users/isis/Downloads/modelos graficas/old-rusty-car-2020-17k-followers/source/Oldcar/Material _49_Base_Color.png
+
+newmtl Material_#111.002
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 1
+map_Kd C:/Users/isis/Downloads/modelos graficas/old-rusty-car-2020-17k-followers/source/Oldcar/Material _95_Base_orange.png
+map_d C:/Users/isis/Downloads/modelos graficas/old-rusty-car-2020-17k-followers/source/Oldcar/Material _95_Base_orange.png

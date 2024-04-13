@@ -43,6 +43,21 @@ public:
 	BillboardRR *billboard;
 	Camara *camara;
 	ModeloRR* model;
+	ModeloRR* house;
+	ModeloRR* jeep;
+	ModeloRR* house2;
+	ModeloRR* oldCar;
+	ModeloRR* oldCar2;
+	ModeloRR* tanque;
+	ModeloRR* tanque2;
+	ModeloRR* caja;
+	ModeloRR* fogata;
+	ModeloRR* rock;
+	ModeloRR* tree;
+	ModeloRR* tronco;
+	ModeloRR* silla;
+
+
 	
 	float izqder;
 	float arriaba;
@@ -77,7 +92,21 @@ public:
 		skydome = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"SkyDome.png");
 		billboard = new BillboardRR(L"Assets/Billboards/fuego-anim.png",L"Assets/Billboards/fuego-anim-normal.png", d3dDevice, d3dContext, 5);
 		model = new ModeloRR(d3dDevice, d3dContext, "Assets/Cofre/Cofre.obj", L"Assets/Cofre/Cofre-color.png", L"Assets/Cofre/Cofre-spec.png", 0, 0);
+		house = new ModeloRR(d3dDevice, d3dContext, "Modelos/house/house.obj", L"Modelos/house/unknown_Base_Color.png", L"Modelos/house/unknown_Roughness.png", -90, 60);
+		jeep = new ModeloRR(d3dDevice, d3dContext, "Modelos/jeep/jeep_phat_ref.obj", L"Modelos/jeep/jeeptext.png", L"Modelos/jeep/jeeptexspec.png", -80, 20);
+		house2 = new ModeloRR(d3dDevice, d3dContext, "Modelos/house2/house2.obj", L"Modelos/house2/FbxTemp_0001.png", L"Modelos/house2/FbxTemp_0002.png", -40, 30);
+		oldCar = new ModeloRR(d3dDevice, d3dContext, "Modelos/oldcar/oldcar.obj", L"Modelos/oldcar/car_d.png", L"Modelos/oldcar/car_m.png", 130, -40);
+		oldCar2 = new ModeloRR(d3dDevice, d3dContext, "Modelos/oldcar2/oldcar2.obj", L"Modelos/oldcar2/Material _95_Base_Blue.png", L"Modelos/oldcar2/Material _95_Metallic.png", -70, 140);
+		tanque = new ModeloRR(d3dDevice, d3dContext, "Modelos/tanque/tanque.obj", L"Modelos/tanque/om_reddruma01_01_bm.png", L"Modelos/tanque/om_reddruma01_01_mm.png", -85, 30);
+		tanque2 = new ModeloRR(d3dDevice, d3dContext, "Modelos/tanque/tanque.obj", L"Modelos/tanque/om_reddruma01_01_bm.png", L"Modelos/tanque/om_reddruma01_01_mm.png", -80, 35);
+		caja = new ModeloRR(d3dDevice, d3dContext, "Modelos/caja/caja.obj", L"Modelos/caja/Safe_albedo.png", L"Modelos/caja/Safe_roughness.png", -35, 15);		
+		fogata = new ModeloRR(d3dDevice, d3dContext, "Modelos/fogata/campfire.obj", L"Modelos/fogata/campfire.png", L"Modelos/fogata/campfire.png", -65, 0);
+		rock = new ModeloRR(d3dDevice, d3dContext, "Modelos/rock/Rock.obj", L"Modelos/rock/ModelTexture.jpg", L"Modelos/rock/ModelTexture.jpg", 5, 5);
+		tree = new ModeloRR(d3dDevice, d3dContext, "Modelos/arbol/arbol.obj", L"Modelos/arbol/treeTex.png", L"Modelos/arbol/treeTex.png", -8, -8);
+		silla = new ModeloRR(d3dDevice, d3dContext, "Modelos/silla/silla.obj", L"Modelos/silla/chair_d.png", L"Modelos/silla/chair_s.png", -55, 80);
 
+
+		//\Modelos\house jeep_phat_ref om_reddruma01_01_mm
 		
 
 		
@@ -271,10 +300,24 @@ public:
 		terreno->Draw(camara->vista, camara->proyeccion);
 		//TurnOnAlphaBlending();
 		billboard->Draw(camara->vista, camara->proyeccion, camara->posCam,
-			-11, -78, 4, 5, uv1, uv2, uv3, uv4, frameBillboard);
+			-65, 0, 5, 5, uv1, uv2, uv3, uv4, frameBillboard);
 
 		//TurnOffAlphaBlending();
 		model->Draw(camara->vista, camara->proyeccion, terreno->Superficie(100, 20), camara->posCam, 10.0f, 0, 'A', 1);
+		house->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-70, 40), camara->posCam, 10.0f, 45, 'Y', 1);
+		jeep->Draw(camara->vista, camara->proyeccion, terreno->Superficie(60, 30), camara->posCam, 10.0f, 0, 'A', 1);
+		house2->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-40, 40), camara->posCam, 30.0f, 180, 'Y', 0.8);
+		oldCar->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-40, 0), camara->posCam, 30.0f, 0, 'A', 1);
+		oldCar2->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-70, 120), camara->posCam, 30.0f, 0, 'A', 1);
+		tanque->Draw(camara->vista, camara->proyeccion, 10.8, camara->posCam, 30.0f, 80, 'Z', 1);
+		tanque2->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-80, 25), camara->posCam, 30.0f, 0, 'A', 1);
+		caja->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-80, 25), camara->posCam, 30.0f, 80, 'Y', 1);
+		fogata->Draw(camara->vista, camara->proyeccion, 10.5, camara->posCam, 30.0f, 0, 'A', 1.5);
+		rock->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 1);
+		tree->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 1);
+		silla->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 2);
+
+
 
 		swapChain->Present( 1, 0 );
 	}
@@ -455,4 +498,6 @@ public:
 	}
 
 };
+
+
 #endif

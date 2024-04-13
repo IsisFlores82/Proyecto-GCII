@@ -1,0 +1,12 @@
+# Blender 4.0.2 MTL File: 'None'
+# www.blender.org
+
+newmtl stage_s706_scr_scr01_g_komono01_BM
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd C:/Users/isis/Downloads/modelos graficas/PC Computer - Resident Evil 5 - Chair/Chair/chair_d.png

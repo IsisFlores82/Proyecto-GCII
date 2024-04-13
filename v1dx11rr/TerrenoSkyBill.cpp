@@ -14,7 +14,10 @@
 #define SCREEN_X 1920
 #define SCREEN_Y 1080
 
+
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+void dibujar_rip(HDC hdc);
 
 DXRR *dxrr;
 GamePadRR *gamePad;
@@ -23,6 +26,7 @@ tagPOINT actualPoint;
 LPDIRECTINPUT8 m_pDirectInput = NULL;
 LPDIRECTINPUTDEVICE8 m_pKeyboardDevice = NULL;
 LPDIRECTINPUTDEVICE8 m_pMouseDevice = NULL;
+
 
 void createMouseDevice(HWND hWnd) {
     m_pDirectInput->CreateDevice(GUID_SysMouse, &m_pMouseDevice, 0);
@@ -57,6 +61,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
     int posX, posY;
     ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
+
+   
     wc.cbSize = sizeof(WNDCLASSEX);
     wc.style = CS_HREDRAW | CS_VREDRAW;
     wc.lpfnWndProc = WindowProc;
@@ -151,6 +157,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 {
     float xPos = 0;
     float yPos = 0;
+    HDC hContextoVentana = GetDC(hWnd);
 
     switch(message)
     {
@@ -165,6 +172,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			{
 
 			} break;
+
+
+        
         
         case WM_MOUSEMOVE: {
 
@@ -186,7 +196,38 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 
             if (keyboardData[DIK_W] & 0x80) {
-                dxrr->vel = 5.f;
+                dxrr->vel = +5.f;
+
+            }
+
+            if (keyboardData[DIK_R] & 0x80) {
+
+                dibujar_rip(hContextoVentana);
+
+                /*float Cx = dxrr->camara->posCam.x;
+                float Cy = dxrr->camara->posCam.y;
+                float Cz = dxrr->camara->posCam.z;
+
+                const size_t lenx = 256;
+                const size_t leny = 256;
+                const size_t lenz = 256;
+                wchar_t bufferx[lenx] = {};
+                wchar_t buffery[leny] = {};
+                wchar_t bufferz[lenz] = {};
+                swprintf(bufferx, L"%f", Cx);
+                swprintf(buffery, L"%f", Cy);
+                swprintf(bufferz, L"%f", Cz);
+
+                std::wstring totalCord;
+                totalCord += L" x:";
+                totalCord += std::wstring(bufferx);
+                totalCord += L" y:";
+                totalCord += std::wstring(buffery);
+                totalCord += L" z:";
+                totalCord += std::wstring(bufferz);
+
+                MessageBox(NULL, totalCord.c_str(), L"Actual coords", MB_OK | MB_NOFOCUS);*/
+               
             }
 
             if (keyboardData[DIK_B] & 0x80) {
@@ -233,10 +274,55 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
         }break;
 
+
     }
 
     return DefWindowProc (hWnd, message, wParam, lParam);
 }
+
+
+
+void dibujar_rip(HDC hdc) {
+    // Configurar el color del texto y el tamaño de fuente
+    COLORREF textColor = RGB(255, 255, 255); // Blanco
+    COLORREF bgColor = RGB(198, 145, 244); // Negro
+    int fontSize = 40;
+    HFONT font = CreateFont(fontSize, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH | FF_DONTCARE, TEXT("arial"));
+    SelectObject(hdc, font);
+    SetTextColor(hdc, textColor);
+    SetBkColor(hdc, bgColor);
+    //SetBkMode(hdc, TRANSPARENT);
+
+    RECT rect;
+    SetRect(&rect, 100, 100, 700, 200);
+
+    float Cx = dxrr->camara->posCam.x;
+    float Cy = dxrr->camara->posCam.y;
+    float Cz = dxrr->camara->posCam.z;
+
+    const size_t lenx = 256;
+    const size_t leny = 256;
+    const size_t lenz = 256;
+    wchar_t bufferx[lenx] = {};
+    wchar_t buffery[leny] = {};
+    wchar_t bufferz[lenz] = {};
+    swprintf(bufferx, L"%f", Cx);
+    swprintf(buffery, L"%f", Cy);
+    swprintf(bufferz, L"%f", Cz);
+
+    std::wstring totalCord;
+    totalCord += L" x:";
+    totalCord += std::wstring(bufferx);
+    totalCord += L" y:";
+    totalCord += std::wstring(buffery);
+    totalCord += L" z:";
+    totalCord += std::wstring(bufferz);
+
+    //tiempo = to_string(FrameSegundos);
+    TextOut(hdc, 100, 190, totalCord.c_str(), totalCord.size());
+
+};
 
 
 
