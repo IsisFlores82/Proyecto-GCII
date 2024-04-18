@@ -93,6 +93,14 @@ public:
 		UnloadContent();
 	}
 
+	void setPosX(float posX) {
+		this->posX = posX;
+	}
+
+	void setPosZ(float posZ) {
+		this->posZ = posZ;
+	}
+
 	float getPosX() {
 		return this->posX;
 	}

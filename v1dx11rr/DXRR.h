@@ -41,6 +41,7 @@ public:
 	TerrenoRR *terreno;
 	SkyDome *skydome;
 	BillboardRR *billboard;
+	BillboardRR* arbol;
 	Camara *camara;
 	ModeloRR* model;
 	ModeloRR* house;
@@ -104,6 +105,9 @@ public:
 		rock = new ModeloRR(d3dDevice, d3dContext, "Modelos/rock/Rock.obj", L"Modelos/rock/ModelTexture.jpg", L"Modelos/rock/ModelTexture.jpg", 5, 5);
 		tree = new ModeloRR(d3dDevice, d3dContext, "Modelos/arbol/arbol.obj", L"Modelos/arbol/treeTex.png", L"Modelos/arbol/treeTex.png", -8, -8);
 		silla = new ModeloRR(d3dDevice, d3dContext, "Modelos/silla/silla.obj", L"Modelos/silla/chair_d.png", L"Modelos/silla/chair_s.png", -55, 80);
+
+
+		arbol = new BillboardRR(L"Modelos/arbolBill/imagen (3).png", L"Modelos/arbolBill/imagen (4).png", d3dDevice, d3dContext, 5);
 
 
 		//\Modelos\house jeep_phat_ref om_reddruma01_01_mm
@@ -300,7 +304,10 @@ public:
 		terreno->Draw(camara->vista, camara->proyeccion);
 		//TurnOnAlphaBlending();
 		billboard->Draw(camara->vista, camara->proyeccion, camara->posCam,
-			-65, 0, 5, 5, uv1, uv2, uv3, uv4, frameBillboard);
+			-65, 0, 5, 5, true ,uv1, uv2, uv3, uv4, frameBillboard);
+
+		arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+			-60, 0, terreno->Superficie(-60, 0), 5, false);
 
 		//TurnOffAlphaBlending();
 		model->Draw(camara->vista, camara->proyeccion, terreno->Superficie(100, 20), camara->posCam, 10.0f, 0, 'A', 1);
@@ -315,9 +322,14 @@ public:
 		fogata->Draw(camara->vista, camara->proyeccion, 10.5, camara->posCam, 30.0f, 0, 'A', 1.5);
 		rock->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 1);
 		tree->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 1);
+		
+		silla->setPosX(-55);
+		silla->setPosZ(70);
 		silla->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 2);
 
-
+		silla->setPosX(-60);
+		silla->setPosZ(80);
+		silla->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 2);
 
 		swapChain->Present( 1, 0 );
 	}

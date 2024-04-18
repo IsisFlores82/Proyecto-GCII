@@ -318,36 +318,66 @@ public:
 	}
 
 
-	void Draw(D3DXMATRIX vista, D3DXMATRIX proyeccion, D3DXVECTOR3 poscam, float xx, float zz, float posy, float escala, vector2* uv1, vector2* uv2, vector2* uv3, vector2* uv4, int frame)
+	void Draw(D3DXMATRIX vista, D3DXMATRIX proyeccion, D3DXVECTOR3 poscam, float xx, float zz, float posy, float escala, bool animado, 
+		vector2* uv1 = 0, vector2* uv2 = 0, vector2* uv3 = 0, vector2* uv4 = 0, int frame = 0)
 	{
 		posx = xx;
 		posz = zz;
 		vertices = new VertexComponent[4];
 
 		// Se calculan los vertices 'x' y 'z'. 'Y' se saca del mapa de normales
+
 		vertices[0].pos.x = 0;
 		vertices[0].pos.y = 0;
 		vertices[0].pos.z = -1 * escala;
-		vertices[0].UV.x = uv1[frame].u;
-		vertices[0].UV.y = uv1[frame].v;
+		
 
 		vertices[1].pos.x = 0;
 		vertices[1].pos.y = 2 * escala;
 		vertices[1].pos.z = -1 * escala;
-		vertices[1].UV.x = uv2[frame].u;
-		vertices[1].UV.y = uv2[frame].v;
+		
 
 		vertices[2].pos.x = 0;
 		vertices[2].pos.y = 2 * escala;
 		vertices[2].pos.z = 1 * escala;
-		vertices[2].UV.x = uv3[frame].u;
-		vertices[2].UV.y = uv3[frame].v;
+		
 
 		vertices[3].pos.x = 0;
 		vertices[3].pos.y = 0;
 		vertices[3].pos.z = 1 * escala;
-		vertices[3].UV.x = uv4[frame].u;
-		vertices[3].UV.y = uv4[frame].v;
+		
+
+		if (animado) {
+			vertices[0].UV.x = uv1[frame].u;
+			vertices[0].UV.y = uv1[frame].v;
+
+			vertices[1].UV.x = uv2[frame].u;
+			vertices[1].UV.y = uv2[frame].v;
+
+			vertices[2].UV.x = uv3[frame].u;
+			vertices[2].UV.y = uv3[frame].v;
+
+			vertices[3].UV.x = uv4[frame].u;
+			vertices[3].UV.y = uv4[frame].v;
+		}
+
+		else
+		{
+
+			vertices[0].UV.x = 0.0f;
+			vertices[0].UV.y = 1.0f;
+
+			vertices[1].UV.x = 0.0f;
+			vertices[1].UV.y = 0.0f;
+
+			vertices[2].UV.x = 1.0f;
+			vertices[2].UV.y = 0.0f;
+
+			vertices[3].UV.x = 1.0f;
+			vertices[3].UV.y = 1.0f;
+
+		}
+		
 
 		//proceso de guardar el buffer de vertices para su uso en el render
 		D3D11_BUFFER_DESC vertexDesc;
