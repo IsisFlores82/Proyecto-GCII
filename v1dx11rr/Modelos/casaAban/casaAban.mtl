@@ -1,0 +1,26 @@
+# Blender 4.0.2 MTL File: 'None'
+# www.blender.org
+
+newmtl Tex1
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 1
+map_Kd C:/Users/isis/Downloads/modelos graficas/old-wooden-shed/source/shed/shed_Tex1_BaseColor.png
+map_Ns C:/Users/isis/Downloads/modelos graficas/old-wooden-shed/source/shed/shed_Tex1_Roughness.png
+map_refl C:/Users/isis/Downloads/modelos graficas/old-wooden-shed/source/shed/shed_Tex1_Metallic.png
+map_d C:/Users/isis/Downloads/modelos graficas/old-wooden-shed/source/shed/shed_Tex1_BaseColor.png
+map_Bump -bm 1.000000 C:/Users/isis/Downloads/modelos graficas/old-wooden-shed/source/shed/shed_Tex1_Normal.png
+
+newmtl Tex2
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 1
+map_Kd C:/Users/isis/Downloads/modelos graficas/old-wooden-shed/source/shed/shed_Tex2_BaseColor.png
+map_Ns C:/Users/isis/Downloads/modelos graficas/old-wooden-shed/source/shed/shed_Tex2_Roughness.png
+map_refl C:/Users/isis/Downloads/modelos graficas/old-wooden-shed/source/shed/shed_Tex2_Metallic.png
+map_d C:/Users/isis/Downloads/modelos graficas/old-wooden-shed/source/shed/shed_Tex2_BaseColor.png
+map_Bump -bm 1.000000 C:/Users/isis/Downloads/modelos graficas/old-wooden-shed/source/shed/shed_Tex2_Normal.png

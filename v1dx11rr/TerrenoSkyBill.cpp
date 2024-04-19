@@ -183,6 +183,62 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
             if (dxrr->frameBillboard == 32)
                 dxrr->frameBillboard = 0;
 
+            dxrr->frameBillboardRain++;
+            if (dxrr->frameBillboardRain == 4)
+                dxrr->frameBillboardRain = 0;
+
+            dxrr->skydomeAnim++;
+            switch (dxrr->skydomeAnim)
+            {
+            case 150:
+                dxrr->skyIndice = 1;
+                break;
+            case 300:
+                dxrr->skyIndice = 2;
+                break;
+            case 450:
+                dxrr->skyIndice = 3;
+                break;
+            case 600:
+                dxrr->skyIndice = 4;
+                break;
+            case 750:
+                dxrr->skyIndice = 5;
+                break;
+            case 900:
+                dxrr->skyIndice = 6;
+                break;
+            case 1050:
+                dxrr->skyIndice = 7;
+                break;
+            case 1200:
+                dxrr->skyIndice = 8;
+                break;
+            case 1350:
+                dxrr->skyIndice = 9;
+                break;
+            case 1500:
+                dxrr->skyIndice = 10;
+                break;
+            case 1650:
+                dxrr->skyIndice = 11;
+                break;
+            case 1800:
+                dxrr->skyIndice = 12;
+                break;
+            case 1950:
+                dxrr->skyIndice = 13;
+                break;
+            case 2100:
+                dxrr->skyIndice = 14;
+                break;
+            case 2250:
+                dxrr->skyIndice = 0;
+                dxrr->skydomeAnim = 0;
+                break;
+            }
+                
+
             dxrr->izqder = 0;
             dxrr->arriaba = 0;
             dxrr->vel = 0;

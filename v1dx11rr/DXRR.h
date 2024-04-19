@@ -37,11 +37,19 @@ public:
 	ID3D11BlendState *alphaBlendState, *commonBlendState;
 
 	int frameBillboard;
+	int frameBillboardRain;
+	int skydomeAnim;
+	int skyIndice;
 
 	TerrenoRR *terreno;
-	SkyDome *skydome;
+	SkyDome* skydome[15];
 	BillboardRR *billboard;
+	BillboardRR* billboardRain;
 	BillboardRR* arbol;
+	BillboardRR* arbolFeoBill;
+	BillboardRR* arbustoBill;
+	BillboardRR* libros;
+
 	Camara *camara;
 	ModeloRR* model;
 	ModeloRR* house;
@@ -57,6 +65,8 @@ public:
 	ModeloRR* tree;
 	ModeloRR* tronco;
 	ModeloRR* silla;
+	ModeloRR* casaAban;
+	ModeloRR* arbolFeo;
 
 
 	
@@ -69,6 +79,11 @@ public:
 	vector2 uv3[32];
 	vector2 uv4[32];
 
+	vector2 uv01[4];
+	vector2 uv02[4];
+	vector2 uv03[4];
+	vector2 uv04[4];
+
 	XACTINDEX cueIndex;
 	CXACT3Util m_XACT3;
 	
@@ -76,6 +91,9 @@ public:
 	{
 		breakpoint = false;
 		frameBillboard = 0;
+		frameBillboardRain = 0;
+		skydomeAnim = 0;
+		skyIndice = 0;
 		ancho = Ancho;
 		alto = Alto;
 		driverType = D3D_DRIVER_TYPE_NULL;
@@ -90,13 +108,32 @@ public:
 		billCargaFuego();
 		camara = new Camara(D3DXVECTOR3(0,80,6), D3DXVECTOR3(0,80,0), D3DXVECTOR3(0,1,0), Ancho, Alto);
 		terreno = new TerrenoRR(300, 300, d3dDevice, d3dContext);
-		skydome = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"SkyDome.png");
-		billboard = new BillboardRR(L"Assets/Billboards/fuego-anim.png",L"Assets/Billboards/fuego-anim-normal.png", d3dDevice, d3dContext, 5);
+
+		
+		skydome[0] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/dia0.png");
+		skydome[1] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/dia1.png");
+		skydome[2] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/dia2.png");
+		skydome[3] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/dia3.png");
+		skydome[4] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/dia4.png");
+		skydome[5] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/tarde0.png");
+		skydome[6] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/tarde1.png");
+		skydome[7] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/tarde2.png");
+		skydome[8] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/tarde3.png");
+		skydome[9] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/tarde4.png");
+		skydome[10] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/noche0.png");
+		skydome[11] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/noche1.png");
+		skydome[12] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/noche2.png");
+		skydome[13] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/noche3.png");
+		skydome[14] = new SkyDome(32, 32, 100.0f, &d3dDevice, &d3dContext, L"Modelos/Sky/noche4.png");
+
+
+		billboard = new BillboardRR(L"Assets/Billboards/fuego-anim.png", L"Assets/Billboards/fuego-anim-normal.png", d3dDevice, d3dContext, 5);
+		billboardRain = new BillboardRR(L"Modelos/rain2.png", L"Modelos/rain2.png", d3dDevice, d3dContext, 10);
 		model = new ModeloRR(d3dDevice, d3dContext, "Assets/Cofre/Cofre.obj", L"Assets/Cofre/Cofre-color.png", L"Assets/Cofre/Cofre-spec.png", 0, 0);
 		house = new ModeloRR(d3dDevice, d3dContext, "Modelos/house/house.obj", L"Modelos/house/unknown_Base_Color.png", L"Modelos/house/unknown_Roughness.png", -90, 60);
 		jeep = new ModeloRR(d3dDevice, d3dContext, "Modelos/jeep/jeep_phat_ref.obj", L"Modelos/jeep/jeeptext.png", L"Modelos/jeep/jeeptexspec.png", -80, 20);
 		house2 = new ModeloRR(d3dDevice, d3dContext, "Modelos/house2/house2.obj", L"Modelos/house2/FbxTemp_0001.png", L"Modelos/house2/FbxTemp_0002.png", -40, 30);
-		oldCar = new ModeloRR(d3dDevice, d3dContext, "Modelos/oldcar/oldcar.obj", L"Modelos/oldcar/car_d.png", L"Modelos/oldcar/car_m.png", 130, -40);
+		oldCar = new ModeloRR(d3dDevice, d3dContext, "Modelos/oldcar/oldcar.obj", L"Modelos/oldcar/car_d.png", L"Modelos/oldcar/car_m.png", 100, -110);
 		oldCar2 = new ModeloRR(d3dDevice, d3dContext, "Modelos/oldcar2/oldcar2.obj", L"Modelos/oldcar2/Material _95_Base_Blue.png", L"Modelos/oldcar2/Material _95_Metallic.png", -70, 140);
 		tanque = new ModeloRR(d3dDevice, d3dContext, "Modelos/tanque/tanque.obj", L"Modelos/tanque/om_reddruma01_01_bm.png", L"Modelos/tanque/om_reddruma01_01_mm.png", -85, 30);
 		tanque2 = new ModeloRR(d3dDevice, d3dContext, "Modelos/tanque/tanque.obj", L"Modelos/tanque/om_reddruma01_01_bm.png", L"Modelos/tanque/om_reddruma01_01_mm.png", -80, 35);
@@ -105,9 +142,14 @@ public:
 		rock = new ModeloRR(d3dDevice, d3dContext, "Modelos/rock/Rock.obj", L"Modelos/rock/ModelTexture.jpg", L"Modelos/rock/ModelTexture.jpg", 5, 5);
 		tree = new ModeloRR(d3dDevice, d3dContext, "Modelos/arbol/arbol.obj", L"Modelos/arbol/treeTex.png", L"Modelos/arbol/treeTex.png", -8, -8);
 		silla = new ModeloRR(d3dDevice, d3dContext, "Modelos/silla/silla.obj", L"Modelos/silla/chair_d.png", L"Modelos/silla/chair_s.png", -55, 80);
+		casaAban = new ModeloRR(d3dDevice, d3dContext, "Modelos/casaAban/casaAban.obj", L"Modelos/casaAban/casaAbanTex.png", L"Modelos/casaAban/casaAbanTex.png", 70,  130);
+		arbolFeo = new ModeloRR(d3dDevice, d3dContext, "Modelos/arbolFeo/arbolFeo.obj", L"Modelos/arbolFeo/ArbolFeoTex.png", L"Modelos/arbolFeo/ArbolFeoTex.png", -130, -100);
 
 
-		arbol = new BillboardRR(L"Modelos/arbolBill/imagen (3).png", L"Modelos/arbolBill/imagen (4).png", d3dDevice, d3dContext, 5);
+		arbol = new BillboardRR(L"Modelos/arbolBill/imagen (3).png", L"Modelos/arbolBill/imagen (4).png", d3dDevice, d3dContext, 10);
+		arbolFeoBill = new BillboardRR(L"Modelos/arbolFeoBill.png", L"Modelos/arbolFeoBill.png", d3dDevice, d3dContext, 10);
+		arbustoBill = new BillboardRR(L"Modelos/arbustoBill.png", L"Modelos/arbustoBill.png", d3dDevice, d3dContext, 10);
+		libros = new BillboardRR(L"Modelos/librosBill.png", L"Modelos/librosBill.png", d3dDevice, d3dContext, 10);
 
 
 		//\Modelos\house jeep_phat_ref om_reddruma01_01_mm
@@ -294,42 +336,156 @@ public:
 		d3dContext->ClearDepthStencilView( depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 		camara->posCam.y = terreno->Superficie(camara->posCam.x, camara->posCam.z) + 5 ;
 		camara->UpdateCam(vel, arriaba, izqder);
-		skydome->Update(camara->vista, camara->proyeccion);
+		skydome[skyIndice]->Update(camara->vista, camara->proyeccion);
 
 		float camPosXZ[2] = { camara->posCam.x, camara->posCam.z };
 
 		TurnOffDepth();
-		skydome->Render(camara->posCam);
+		skydome[skyIndice]->Render(camara->posCam);
 		TurnOnDepth();
 		terreno->Draw(camara->vista, camara->proyeccion);
 		//TurnOnAlphaBlending();
 		billboard->Draw(camara->vista, camara->proyeccion, camara->posCam,
 			-65, 0, 5, 5, true ,uv1, uv2, uv3, uv4, frameBillboard);
 
-		arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
-			-60, 0, terreno->Superficie(-60, 0), 5, false);
+		//billboardRain->Draw(camara->vista, camara->proyeccion, camara->posCam,
+		//	-65, 0, 5, 10, true, uv01, uv02, uv03, uv04, frameBillboardRain);
+
+		//BILLBOARDS DE ARBOLES ---------
+		{
+
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				-80, -80, terreno->Superficie(-60, 0), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				-114, -120, terreno->Superficie(-114, -120), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				150, 80, terreno->Superficie(150, 80), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				-150, 72, terreno->Superficie(-150, 72), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				100, -50, terreno->Superficie(100, -50), 10, false);
+
+
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				20, -50, terreno->Superficie(20, -50), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				70, -90, terreno->Superficie(70, -90), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				110, -40, terreno->Superficie(110, -40), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				113, -30, terreno->Superficie(113, -30), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				130, -115, terreno->Superficie(130, -115), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				35, -130, terreno->Superficie(35, -130), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				145, -140, terreno->Superficie(145, -140), 10, false);
+
+
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				70, 40, terreno->Superficie(70, 40), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				20, 45, terreno->Superficie(20, 45), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				90, 90, terreno->Superficie(90, 90), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				20, 100, terreno->Superficie(20, 100), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				140, 80, terreno->Superficie(140, 80), 10, false);
+
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				-40, -60, terreno->Superficie(-40, -60), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				-20, -110, terreno->Superficie(-20, -110), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				-30, -140, terreno->Superficie(-30, -140), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				-90, -130, terreno->Superficie(-90, -130), 10, false);
+			arbol->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				-120, -70, terreno->Superficie(-120, -70), 10, false);
+
+
+			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				120, -130, terreno->Superficie(120, -130) -3, 10, false);
+			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				40, -110, terreno->Superficie(40, -110) -3, 10, false);
+			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				120, 70, terreno->Superficie(120, 70)-3, 10, false);
+			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				140, 110, terreno->Superficie(140, 110)-3, 10, false);
+			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				-140, -50, terreno->Superficie(-140, -50), 10, false);
+			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				-145, 90, terreno->Superficie(-145, 90)-3, 10, false);
+
+		}
+
+		//BILLBOARD DE LIBROS ---------
+		{
+			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				145, -100, terreno->Superficie(145, -100) - 3, 10, false);
+			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				110, -130, terreno->Superficie(110, -130) - 3, 10, false);
+			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				130, -130, terreno->Superficie(110, -130) - 3, 10, false);
+		}
+
 
 		//TurnOffAlphaBlending();
 		model->Draw(camara->vista, camara->proyeccion, terreno->Superficie(100, 20), camara->posCam, 10.0f, 0, 'A', 1);
 		house->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-70, 40), camara->posCam, 10.0f, 45, 'Y', 1);
 		jeep->Draw(camara->vista, camara->proyeccion, terreno->Superficie(60, 30), camara->posCam, 10.0f, 0, 'A', 1);
 		house2->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-40, 40), camara->posCam, 30.0f, 180, 'Y', 0.8);
-		oldCar->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-40, 0), camara->posCam, 30.0f, 0, 'A', 1);
+		oldCar->Draw(camara->vista, camara->proyeccion, terreno->Superficie(100, -110), camara->posCam, 30.0f, 0, 'A', 1);
 		oldCar2->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-70, 120), camara->posCam, 30.0f, 0, 'A', 1);
 		tanque->Draw(camara->vista, camara->proyeccion, 10.8, camara->posCam, 30.0f, 80, 'Z', 1);
 		tanque2->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-80, 25), camara->posCam, 30.0f, 0, 'A', 1);
 		caja->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-80, 25), camara->posCam, 30.0f, 80, 'Y', 1);
 		fogata->Draw(camara->vista, camara->proyeccion, 10.5, camara->posCam, 30.0f, 0, 'A', 1.5);
 		rock->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 1);
-		tree->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 1);
+		casaAban->Draw(camara->vista, camara->proyeccion, terreno->Superficie(casaAban->getPosX(), casaAban->getPosZ()), camara->posCam, 30.0f, 0, 'A', 1);
 		
-		silla->setPosX(-55);
-		silla->setPosZ(70);
-		silla->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 2);
 
-		silla->setPosX(-60);
-		silla->setPosZ(80);
-		silla->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 2);
+		arbolFeo->setPosX(-130);
+		arbolFeo->setPosZ(-100);
+		arbolFeo->Draw(camara->vista, camara->proyeccion, terreno->Superficie(arbolFeo->getPosX(), arbolFeo->getPosZ()), camara->posCam, 30.0f, 0, 'A', 1);
+		
+		arbolFeo->setPosX(80);
+		arbolFeo->setPosZ(-130);
+		arbolFeo->Draw(camara->vista, camara->proyeccion, terreno->Superficie(arbolFeo->getPosX(), arbolFeo->getPosZ()) -2, camara->posCam, 30.0f, 0, 'A', 1);
+		
+		arbolFeo->setPosX(140);
+		arbolFeo->setPosZ(-20);
+		arbolFeo->Draw(camara->vista, camara->proyeccion, terreno->Superficie(arbolFeo->getPosX(), arbolFeo->getPosZ()), camara->posCam, 30.0f, 0, 'A', 1);
+		
+		arbolFeo->setPosX(120);
+		arbolFeo->setPosZ(90);
+		arbolFeo->Draw(camara->vista, camara->proyeccion, terreno->Superficie(arbolFeo->getPosX(), arbolFeo->getPosZ()), camara->posCam, 30.0f, 0, 'A', 1);
+		
+		arbolFeo->setPosX(-130);
+		arbolFeo->setPosZ(70);
+		arbolFeo->Draw(camara->vista, camara->proyeccion, terreno->Superficie(arbolFeo->getPosX(), arbolFeo->getPosZ()), camara->posCam, 30.0f, 0, 'A', 1);
+		
+		arbolFeo->setPosX(-120);
+		arbolFeo->setPosZ(120);
+		arbolFeo->Draw(camara->vista, camara->proyeccion, terreno->Superficie(arbolFeo->getPosX(), arbolFeo->getPosZ()), camara->posCam, 30.0f, 0, 'A', 1);
+
+
+		
+		tree->setPosX(-8);
+		tree->setPosZ(-8);
+		tree->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-8,-8), camara->posCam, 30.0f, 0, 'A', 1);
+		tree->setPosX(0);
+		tree->setPosZ(-130);
+		tree->Draw(camara->vista, camara->proyeccion, terreno->Superficie(0,-130), camara->posCam, 30.0f, 0, 'A', 1);
+
+
+
+		//-70-130
+		silla->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 1);
+
+
+
 
 		swapChain->Present( 1, 0 );
 	}
@@ -508,6 +664,48 @@ public:
 			uv4[j + 24].v = 1;
 		}
 	}
+
+	void billCargaLluvia()
+	{
+		uv01[0].u = 0;		  
+		uv01[0].v = 0;
+		uv01[1].u = 0;
+		uv01[1].v = .25;
+		uv01[2].u = 0;
+		uv01[2].v = .50;
+		uv01[3].u = 0;
+		uv01[3].v = .75;
+
+		uv02[0].u = 0;
+		uv02[0].v = 0;		   
+		uv02[1].u = 0;
+		uv02[1].v = .25;		   
+		uv02[2].u = 0;
+		uv02[2].v = .50;		 
+		uv02[3].u = 0;
+		uv02[3].v = .75;
+
+		uv03[0].u = 0;
+		uv03[0].v = 0;
+		uv03[1].u = 0;
+		uv03[1].v = .25;
+		uv03[2].u = 0;
+		uv03[2].v = .50;
+		uv03[3].u = 0;
+		uv03[3].v = .75;
+
+		uv04[0].u = 0;
+		uv04[0].v = 0;
+		uv04[1].u = 0;
+		uv04[1].v = .25;
+		uv04[2].u = 0;
+		uv04[2].v = .50;
+		uv04[3].u = 0;
+		uv04[3].v = .75;
+
+
+	}
+		
 
 };
 
