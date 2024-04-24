@@ -148,8 +148,8 @@ public:
 
 		arbol = new BillboardRR(L"Modelos/arbolBill/imagen (3).png", L"Modelos/arbolBill/imagen (4).png", d3dDevice, d3dContext, 10);
 		arbolFeoBill = new BillboardRR(L"Modelos/arbolFeoBill.png", L"Modelos/arbolFeoBill.png", d3dDevice, d3dContext, 10);
-		arbustoBill = new BillboardRR(L"Modelos/arbustoBill.png", L"Modelos/arbustoBill.png", d3dDevice, d3dContext, 10);
-		libros = new BillboardRR(L"Modelos/librosBill.png", L"Modelos/librosBill.png", d3dDevice, d3dContext, 10);
+		arbustoBill = new BillboardRR(L"Modelos/arbustoBill.png", L"Modelos/arbustoBill.png", d3dDevice, d3dContext, 7);
+		libros = new BillboardRR(L"Modelos/librosBill.png", L"Modelos/librosBill.png", d3dDevice, d3dContext, 1);
 
 
 		//\Modelos\house jeep_phat_ref om_reddruma01_01_mm
@@ -406,28 +406,32 @@ public:
 
 
 			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				120, -130, terreno->Superficie(120, -130) -3, 10, false);
+				120, -130, terreno->Superficie(120, -130) -1, 10, false);
 			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				40, -110, terreno->Superficie(40, -110) -3, 10, false);
+				40, -110, terreno->Superficie(40, -110) -1, 10, false);
 			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				120, 70, terreno->Superficie(120, 70)-3, 10, false);
+				120, 70, terreno->Superficie(120, 70)-1, 10, false);
 			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				140, 110, terreno->Superficie(140, 110)-3, 10, false);
+				140, 110, terreno->Superficie(140, 110)-1, 10, false);
 			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
 				-140, -50, terreno->Superficie(-140, -50), 10, false);
 			arbolFeoBill->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				-145, 90, terreno->Superficie(-145, 90)-3, 10, false);
+				-145, 90, terreno->Superficie(-145, 90)-1, 10, false);
 
 		}
 
 		//BILLBOARD DE LIBROS ---------
 		{
 			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				145, -100, terreno->Superficie(145, -100) - 3, 10, false);
+				145, -100, terreno->Superficie(145, -100) - 1, 3, false);
 			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				110, -130, terreno->Superficie(110, -130) - 3, 10, false);
+				-110, -130, terreno->Superficie(-110, -130) - 1, 3, false);
 			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				130, -130, terreno->Superficie(110, -130) - 3, 10, false);
+				-130, 30, terreno->Superficie(-130, 30) - 1, 3, false);
+			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				70, 120, terreno->Superficie(70, 120) - 1, 3, false);
+			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				-140, 110, terreno->Superficie(-140, 110) - 1, 3, false);
 		}
 
 
