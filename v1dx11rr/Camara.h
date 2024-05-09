@@ -8,7 +8,7 @@
 #include <D3DX11.h>
 #include <D3DX10math.h>
 
-class Camara{
+class Camara {
 public:
 	D3DXVECTOR3 posCam;
 	D3DXVECTOR3 hdveo;
@@ -20,6 +20,17 @@ public:
 	D3DXMATRIX proyeccion;
 	int ancho;
 	int alto;
+
+	D3DXVECTOR3 posCamPast;
+
+	float point[2];
+
+	float* GetPoint() {
+		point[0] = posCam.x;
+		point[1] = posCam.z;
+
+		return point;
+	}
 
 	Camara(D3DXVECTOR3 eye, D3DXVECTOR3 target, D3DXVECTOR3 up, int Ancho, int Alto)
 	{
@@ -51,6 +62,9 @@ public:
 
 	D3DXMATRIX UpdateCam(float vel, float arriaba, float izqder)
 	{
+		//guarda la prosicion anterior de la camara para cuando suceda colision
+		posCamPast = posCam;
+
 		D3DXVECTOR4 tempo;
 		D3DXQUATERNION quatern; //quaternion temporal para la camara
 		D3DXMATRIX giraUp, giraRight; //matrices temporales para los giros

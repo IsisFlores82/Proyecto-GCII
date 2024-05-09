@@ -72,7 +72,19 @@ private:
 	float posX;
 	float posZ;
 
+	float sphere[3];
+	float radio;
+
 public:
+
+	float* GetSphere(float radio) {
+		sphere[0] = posX;
+		sphere[1] = posZ;
+		sphere[2] = radio;
+
+		return sphere;
+	}
+
 	ModeloRR(ID3D11Device* D3DDevice, ID3D11DeviceContext* D3DContext, char* ModelPath, WCHAR* colorTexturePath, WCHAR* specularTexturePath, float _posX, float _posZ)
 	{
 		//copiamos el device y el device context a la clase terreno
@@ -81,6 +93,7 @@ public:
 
 		posX = _posX;
 		posZ = _posZ;
+		radio = radio;
 
 		//aqui cargamos las texturas de alturas y el cesped
 		CargaParametros(ModelPath, colorTexturePath, specularTexturePath);//L"Assets/Tent-Tower/tent_diffuse.jpg"

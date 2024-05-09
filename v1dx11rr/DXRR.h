@@ -68,7 +68,7 @@ public:
 	ModeloRR* casaAban;
 	ModeloRR* arbolFeo;
 
-
+	bool audioreproducido = false;
 	
 	float izqder;
 	float arriaba;
@@ -85,6 +85,8 @@ public:
 	vector2 uv04[4];
 
 	XACTINDEX cueIndex;
+	XACTINDEX cueIndex2;
+	XACTINDEX cueIndex3;
 	CXACT3Util m_XACT3;
 	
     DXRR(HWND hWnd, int Ancho, int Alto)
@@ -293,6 +295,37 @@ public:
 
 		d3dContext->OMSetRenderTargets(1, &backBufferTarget, depthStencilView);
 
+
+
+		//sonidos
+
+		bool res = m_XACT3.Initialize();
+		if (!res)
+		{
+			MessageBox(0, L"Error", L"Error al inicializar XACT", MB_OK);
+			return false;
+		}
+		
+		res = m_XACT3.LoadWaveBank(L"Assets/audioo/WaveBank.xwb");
+		if (!res)
+		{
+			MessageBox(0, L"Error", L"Error al inicializar wave bank", MB_OK);
+			return false;
+		}
+		res = m_XACT3.LoadSoundBank(L"Assets/audioo/SoundBank.xsb");
+		if (!res)
+		{
+			MessageBox(0, L"Error", L"Error al inicializar sound bank", MB_OK);
+			return false;
+		}
+
+		//reproducir audio de fondo
+
+		cueIndex = m_XACT3.m_pSoundBank->GetCueIndex("Fondoo");
+		m_XACT3.m_pSoundBank->Play(cueIndex, 0, 0, 0);
+
+		cueIndex2 = m_XACT3.m_pSoundBank->GetCueIndex("Golpee");
+
 		return true;			
 		
 	}
@@ -446,6 +479,15 @@ public:
 		tanque2->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-80, 25), camara->posCam, 30.0f, 0, 'A', 1);
 		caja->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-80, 25), camara->posCam, 30.0f, 80, 'Y', 1);
 		fogata->Draw(camara->vista, camara->proyeccion, 10.5, camara->posCam, 30.0f, 0, 'A', 1.5);
+		if (isPointInsideSphere(camara->GetPoint(), fogata->GetSphere(3))) {
+			camara->posCam = camara->posCamPast;
+			if (!audioreproducido) {
+				m_XACT3.m_pSoundBank->Play(cueIndex2, 0, 0, 0);
+				audioreproducido = true;
+			}
+		}
+
+
 		rock->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 1);
 		casaAban->Draw(camara->vista, camara->proyeccion, terreno->Superficie(casaAban->getPosX(), casaAban->getPosZ()), camara->posCam, 30.0f, 0, 'A', 1);
 		
