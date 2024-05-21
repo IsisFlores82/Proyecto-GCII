@@ -103,6 +103,11 @@ public:
 		D3DXMatrixTranspose( &vista, &vista );
 		return vista;
 	}
+
+	void SetAltura(int altura) {
+		this->posCam.y = this->posCam.y + altura;
+	}
+
 	~Camara()
 	{
 	}

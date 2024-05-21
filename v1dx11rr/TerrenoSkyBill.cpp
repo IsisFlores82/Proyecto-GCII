@@ -28,6 +28,9 @@ LPDIRECTINPUTDEVICE8 m_pKeyboardDevice = NULL;
 LPDIRECTINPUTDEVICE8 m_pMouseDevice = NULL;
 
 
+bool footsteps = false;
+
+
 void createMouseDevice(HWND hWnd) {
     m_pDirectInput->CreateDevice(GUID_SysMouse, &m_pMouseDevice, 0);
 
@@ -161,6 +164,16 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
     switch(message)
     {
+
+        
+        case WM_SETFOCUS: {
+            if (m_pMouseDevice)
+                m_pMouseDevice->Acquire();
+            if (m_pKeyboardDevice)
+                m_pKeyboardDevice->Acquire();;
+
+        }break;
+
         case WM_DESTROY:
             {
 				KillTimer(hWnd, 100);
@@ -173,8 +186,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 			} break;
 
-
-        
+      
         
         case WM_MOUSEMOVE: {
 
@@ -247,15 +259,36 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
             m_pKeyboardDevice->GetDeviceState(sizeof(keyboardData), (void*)&keyboardData);
 
             if (keyboardData[DIK_S] & 0x80) {
-                dxrr->vel = -5.f;
+                if (dxrr->vehiculo)
+                {
+                    dxrr->vel = -8.0f;
+                }
+                else
+                {
+                    dxrr->vel = -3.5f; 
+                }
+              
+                   
             }
-
 
             if (keyboardData[DIK_W] & 0x80) {
-                dxrr->vel = +5.f;
-
+                if (dxrr->vehiculo)
+                {
+                    dxrr->vel =+8.0f;
+                }
+                else
+                {
+                    dxrr->vel =+3.5f;
+                }
+              
+                //dxrr->m_XACT3.m_pSoundBank->Play(cueIndexFootsteps, 0, 0, 0);                
             }
-
+            
+            if (keyboardData[DIK_E] & 0x80) {
+                dxrr->vehiculo = false;
+                dxrr->outOfCar = true;
+            }
+            
             if (keyboardData[DIK_R] & 0x80) {
 
                 dibujar_rip(hContextoVentana);
@@ -290,7 +323,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
                 dxrr->breakpoint = true;
             }
 
-            if (keyboardData[DIK_ESCAPE] & 0x80) {
+            if (keyboardData[DIK_P] & 0x80) {
                 KillTimer(hWnd, 100);
                 PostQuitMessage(0);
                 return 0;
@@ -330,8 +363,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
         }break;
 
+      
+
 
     }
+
+    
+
 
     return DefWindowProc (hWnd, message, wParam, lParam);
 }

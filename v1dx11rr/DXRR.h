@@ -67,6 +67,7 @@ public:
 	ModeloRR* silla;
 	ModeloRR* casaAban;
 	ModeloRR* arbolFeo;
+	ModeloRR* books;
 
 	bool audioreproducido = false;
 	
@@ -84,10 +85,23 @@ public:
 	vector2 uv03[4];
 	vector2 uv04[4];
 
-	XACTINDEX cueIndex;
-	XACTINDEX cueIndex2;
-	XACTINDEX cueIndex3;
+	XACTINDEX cueIndexFondo;
+	XACTINDEX cueIndexFire;
+	XACTINDEX cueIndexCollect;
+	XACTINDEX cueIndexChest;
+	XACTINDEX cueIndexFootsteps;
+	XACTINDEX cueIndexJeep;
+	XACTINDEX cueIndexMonster;
+
 	CXACT3Util m_XACT3;
+
+	bool ColectedBooks[5] = { false };
+	bool ColectedBooksAudio[5] = { false };
+	bool footstepsPlay = true;
+	bool JeepPlay = true;
+
+	bool vehiculo = false;
+	bool outOfCar = false;
 	
     DXRR(HWND hWnd, int Ancho, int Alto)
 	{
@@ -146,6 +160,7 @@ public:
 		silla = new ModeloRR(d3dDevice, d3dContext, "Modelos/silla/silla.obj", L"Modelos/silla/chair_d.png", L"Modelos/silla/chair_s.png", -55, 80);
 		casaAban = new ModeloRR(d3dDevice, d3dContext, "Modelos/casaAban/casaAban.obj", L"Modelos/casaAban/casaAbanTex.png", L"Modelos/casaAban/casaAbanTex.png", 70,  130);
 		arbolFeo = new ModeloRR(d3dDevice, d3dContext, "Modelos/arbolFeo/arbolFeo.obj", L"Modelos/arbolFeo/ArbolFeoTex.png", L"Modelos/arbolFeo/ArbolFeoTex.png", -130, -100);
+		books = new ModeloRR(d3dDevice, d3dContext, "Modelos/libros/books.obj", L"Modelos/libros/bookpile_c.png", L"Modelos/libros/bookpile_n.png", 145, -100);
 
 
 		arbol = new BillboardRR(L"Modelos/arbolBill/imagen (3).png", L"Modelos/arbolBill/imagen (4).png", d3dDevice, d3dContext, 10);
@@ -321,10 +336,14 @@ public:
 
 		//reproducir audio de fondo
 
-		cueIndex = m_XACT3.m_pSoundBank->GetCueIndex("Fondoo");
-		m_XACT3.m_pSoundBank->Play(cueIndex, 0, 0, 0);
+		cueIndexFondo = m_XACT3.m_pSoundBank->GetCueIndex("backgroundMusic");
+		m_XACT3.m_pSoundBank->Play(cueIndexFondo, 0, 0, 0);
 
-		cueIndex2 = m_XACT3.m_pSoundBank->GetCueIndex("Golpee");
+		cueIndexFootsteps = m_XACT3.m_pSoundBank->GetCueIndex("footsteps");	
+		cueIndexFire = m_XACT3.m_pSoundBank->GetCueIndex("Fire");
+		cueIndexCollect = m_XACT3.m_pSoundBank->GetCueIndex("Collect");
+		cueIndexJeep = m_XACT3.m_pSoundBank->GetCueIndex("jeep");
+		
 
 		return true;			
 		
@@ -367,7 +386,14 @@ public:
 		float clearColor[4] = { 0, 0, 0, 1.0f };
 		d3dContext->ClearRenderTargetView( backBufferTarget, clearColor );
 		d3dContext->ClearDepthStencilView( depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
-		camara->posCam.y = terreno->Superficie(camara->posCam.x, camara->posCam.z) + 5 ;
+		if (!vehiculo) {
+			camara->posCam.y = terreno->Superficie(camara->posCam.x, camara->posCam.z) + 5;
+		}
+		if (vehiculo)
+		{
+			camara->posCam.y = terreno->Superficie(camara->posCam.x, camara->posCam.z) + 10;
+		}
+		
 		camara->UpdateCam(vel, arriaba, izqder);
 		skydome[skyIndice]->Update(camara->vista, camara->proyeccion);
 
@@ -453,25 +479,105 @@ public:
 
 		}
 
-		//BILLBOARD DE LIBROS ---------
+		//MODELOS DE LIBROS (RECOLECCION) ---------
 		{
-			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				145, -100, terreno->Superficie(145, -100) - 1, 3, false);
-			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				-110, -130, terreno->Superficie(-110, -130) - 1, 3, false);
-			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				-130, 30, terreno->Superficie(-130, 30) - 1, 3, false);
-			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				70, 120, terreno->Superficie(70, 120) - 1, 3, false);
-			libros->Draw(camara->vista, camara->proyeccion, camara->posCam,
-				-140, 110, terreno->Superficie(-140, 110) - 1, 3, false);
+			/*books->Draw(camara->vista, camara->proyeccion, camara->posCam,
+				145, -100, terreno->Superficie(145, -100) - 1, 3, false);*/
+
+		
+			if (!ColectedBooks[0]) {
+				books->setPosX(145);
+				books->setPosZ(-100);
+				books->Draw(camara->vista, camara->proyeccion, terreno->Superficie(145, -100), camara->posCam, 10.0f, 0, 'A', 1);
+
+				if (isPointInsideSphere(camara->GetPoint(), books->GetSphere(8)) && !ColectedBooksAudio[0]) {
+					camara->posCam = camara->posCamPast;
+					m_XACT3.m_pSoundBank->Play(cueIndexCollect, 0, 0, 0);
+					ColectedBooksAudio[0] = true;
+					ColectedBooks[0] = true;
+
+				}
+			}
+
+			if (!ColectedBooks[1]) {
+				books->setPosX(-110);
+				books->setPosZ(-130);
+				books->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-110, -130), camara->posCam, 10.0f, 0, 'A', 1);
+
+				if (isPointInsideSphere(camara->GetPoint(), books->GetSphere(8)) && !ColectedBooksAudio[1]) {
+					
+					m_XACT3.m_pSoundBank->Play(cueIndexCollect, 0, 0, 0);
+					ColectedBooksAudio[1] = true;
+					ColectedBooks[1] = true;
+				}
+			}
+			
+
+			if (!ColectedBooks[2]) {
+				books->setPosX(-130);
+				books->setPosZ(-30);
+				books->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-130, -30), camara->posCam, 10.0f, 0, 'A', 1);
+
+				if (isPointInsideSphere(camara->GetPoint(), books->GetSphere(8)) && !ColectedBooksAudio[2]) {
+					
+					m_XACT3.m_pSoundBank->Play(cueIndexCollect, 0, 0, 0);
+					ColectedBooksAudio[2] = true;
+					ColectedBooks[2] = true;
+				}
+
+			}
+			
+
+			if (!ColectedBooks[3]) {
+				books->setPosX(-70);
+				books->setPosZ(-120);
+				books->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-70, -120), camara->posCam, 10.0f, 0, 'A', 1);
+
+				if (isPointInsideSphere(camara->GetPoint(), books->GetSphere(8)) && !ColectedBooksAudio[3]) {
+					
+					m_XACT3.m_pSoundBank->Play(cueIndexCollect, 0, 0, 0);
+					ColectedBooksAudio[3] = true;
+					ColectedBooks[3] = true;
+				}
+			}
+
+
+			if (!ColectedBooks[4]) {
+				books->setPosX(-140);
+				books->setPosZ(140);
+				books->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-140, 140), camara->posCam, 10.0f, 0, 'A', 1);
+
+				if (isPointInsideSphere(camara->GetPoint(), books->GetSphere(8)) && !ColectedBooksAudio[4]) {
+					
+					m_XACT3.m_pSoundBank->Play(cueIndexCollect, 0, 0, 0);
+					ColectedBooksAudio[4] = true;
+					ColectedBooks[4] = true;
+				}
+			}
+
+
 		}
 
 
 		//TurnOffAlphaBlending();
 		model->Draw(camara->vista, camara->proyeccion, terreno->Superficie(100, 20), camara->posCam, 10.0f, 0, 'A', 1);
 		house->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-70, 40), camara->posCam, 10.0f, 45, 'Y', 1);
-		jeep->Draw(camara->vista, camara->proyeccion, terreno->Superficie(60, 30), camara->posCam, 10.0f, 0, 'A', 1);
+		if (vehiculo)
+		{
+			jeep->setPosX(camara->posCam.x);
+			jeep->setPosZ(camara->posCam.z);
+			jeep->Draw(camara->vista, camara->proyeccion, terreno->Superficie(jeep->getPosX(), jeep->getPosZ() ), camara->posCam, 10.0f, 0, 'A', 1);
+		}
+		else
+		{
+			jeep->Draw(camara->vista, camara->proyeccion, terreno->Superficie(jeep->getPosX(), jeep->getPosZ()), camara->posCam, 10.0f, 0, 'A', 1);
+			if (outOfCar){
+				camara->posCam.x = camara->posCam.x - 5;
+				camara->posCam.z = camara->posCam.z - 5;
+				outOfCar = false;
+			}
+		}
+		
 		house2->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-40, 40), camara->posCam, 30.0f, 180, 'Y', 0.8);
 		oldCar->Draw(camara->vista, camara->proyeccion, terreno->Superficie(100, -110), camara->posCam, 30.0f, 0, 'A', 1);
 		oldCar2->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-70, 120), camara->posCam, 30.0f, 0, 'A', 1);
@@ -479,15 +585,24 @@ public:
 		tanque2->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-80, 25), camara->posCam, 30.0f, 0, 'A', 1);
 		caja->Draw(camara->vista, camara->proyeccion, terreno->Superficie(-80, 25), camara->posCam, 30.0f, 80, 'Y', 1);
 		fogata->Draw(camara->vista, camara->proyeccion, 10.5, camara->posCam, 30.0f, 0, 'A', 1.5);
-		if (isPointInsideSphere(camara->GetPoint(), fogata->GetSphere(3))) {
-			camara->posCam = camara->posCamPast;
+		
+		
+		
+		//audio fogata
+		if (isPointInsideSphere(camara->GetPoint(), fogata->GetSphere(20))) {
 			if (!audioreproducido) {
-				m_XACT3.m_pSoundBank->Play(cueIndex2, 0, 0, 0);
+				m_XACT3.m_pSoundBank->Play(cueIndexFire, 0, 0, 0);
 				audioreproducido = true;
 			}
 		}
+		else
+		{
+			m_XACT3.m_pSoundBank->Stop(cueIndexFire,0);
+			audioreproducido = false;
+		}
 
 
+		
 		rock->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 1);
 		casaAban->Draw(camara->vista, camara->proyeccion, terreno->Superficie(casaAban->getPosX(), casaAban->getPosZ()), camara->posCam, 30.0f, 0, 'A', 1);
 		
@@ -530,8 +645,51 @@ public:
 		//-70-130
 		silla->Draw(camara->vista, camara->proyeccion, terreno->Superficie(12, 15), camara->posCam, 30.0f, 0, 'A', 1);
 
+		//coolisiones 
+		if (isPointInsideSphere(camara->GetPoint(), fogata->GetSphere(4))) {
+			camara->posCam = camara->posCamPast;
+		}
+
+		if (isPointInsideSphere(camara->GetPoint(), jeep->GetSphere(7))) {
+			
+			vehiculo = true;
+		}
+		else
+		{
+			vehiculo = false;
+		}
+
+		//sonidos para las pisadas
+
+		
+		if (vel!=0 && !vehiculo) {
+			if (!footstepsPlay)
+			{
+				m_XACT3.m_pSoundBank->Play(cueIndexFootsteps, 0, 0, 0);
+				footstepsPlay = true;
+			}			
+		}		
+		else
+		{
+			m_XACT3.m_pSoundBank->Stop(cueIndexFootsteps, 0);
+			footstepsPlay = false;
+		}
+
+		if (vehiculo) {
+			if (!JeepPlay){
+				m_XACT3.m_pSoundBank->Play(cueIndexJeep, 0, 100 ,0 );
+				JeepPlay = true;
+			}
+		}
+		else{			
+			m_XACT3.m_pSoundBank->Stop(cueIndexJeep, 0);
+			JeepPlay = false;
+		}
 
 
+
+		
+		
 
 		swapChain->Present( 1, 0 );
 	}
